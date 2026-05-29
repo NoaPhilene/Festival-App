@@ -1,0 +1,216 @@
+:root {
+  --red: #f03228;
+  --red-dark: #c81e15;
+  --bg: #f4f4f6;
+  --card: #ffffff;
+  --border: #e2e2e6;
+  --text: #111111;
+  --muted: #6b7280;
+  --nav-bg: #111111;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ── Navigatie ── */
+.nav {
+  background: var(--nav-bg);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  height: 52px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  gap: 4px;
+}
+.nav-brand {
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  margin-right: 24px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.nav-brand span { color: var(--red); }
+.nav a {
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  padding: 0 12px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.nav a:hover { color: #fff; }
+.nav a.active { color: #fff; border-bottom-color: var(--red); }
+
+/* ── Pagina-layout ── */
+.page { max-width: 1100px; margin: 0 auto; padding: 28px 24px 48px; }
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.page-title { font-size: 20px; font-weight: 700; }
+
+/* ── Cards ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.card-title {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* ── Tabel ── */
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left;
+  padding: 9px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: #fafafb;
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+tr:last-child td { border-bottom: 0; }
+tbody tr:hover td { background: #fafafb; }
+
+/* ── Badges ── */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-sat  { background: #fff4e5; color: #a45200; }
+.badge-sun  { background: #e5eeff; color: #1a3fa0; }
+.badge-gray { background: #f0f0f4; color: var(--muted); }
+
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
+.dot-ponton { background: #f03228; }
+.dot-lake   { background: #247ba0; }
+.dot-club   { background: #1f1f1f; }
+.dot-hangar { background: #e3b505; }
+
+/* ── Knoppen ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 8px 16px; border-radius: 7px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: none; text-decoration: none;
+  transition: background 0.12s, opacity 0.12s;
+}
+.btn:hover { opacity: 0.88; }
+.btn-primary   { background: var(--red); color: #fff; }
+.btn-secondary { background: #f0f0f4; color: var(--text); }
+.btn-danger    { background: #fdecea; color: #c81e15; }
+.btn-sm        { padding: 5px 10px; font-size: 12px; border-radius: 5px; }
+
+/* ── Formulier ── */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 20px;
+}
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field.full { grid-column: 1 / -1; }
+label {
+  font-size: 11px; font-weight: 700;
+  color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;
+}
+input[type=text],
+input[type=time],
+input[type=date],
+input[type=url],
+select,
+textarea {
+  padding: 8px 11px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff;
+  color: var(--text);
+  width: 100%;
+  transition: border-color 0.15s;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--red);
+  box-shadow: 0 0 0 2px rgba(240,50,40,0.12);
+}
+textarea { resize: vertical; min-height: 80px; }
+.form-actions {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  background: #fafafb;
+  display: flex;
+  gap: 8px;
+}
+
+/* ── Flash-berichten ── */
+.alert {
+  padding: 11px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px; font-weight: 500;
+}
+.alert-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+.alert-error   { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+/* ── Lege staat ── */
+.empty { padding: 48px 24px; text-align: center; color: var(--muted); }
+
+/* ── Dashboard ── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+.stat-number { font-size: 34px; font-weight: 700; color: var(--red); line-height: 1; }
+.stat-label  { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 500; }
+
+/* ── Dag-scheider in tabel ── */
+.day-separator td {
+  background: #fafafb;
+  font-size: 11px; font-weight: 700;
+  color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 6px 14px;
+  border-bottom: 1px solid var(--border);
+}
