@@ -11,8 +11,6 @@ function fmtTime(mins) {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 }
 
-const HOURS = Array.from({ length: 15 }, (_, i) => 10 + i);
-
 export function Schedule({ t, lang, favs, toggleFav, onOpenAct, onGoto }) {
   const { D } = useAppData();
   const [day, setDay] = useState('sat');

@@ -1,15 +1,9 @@
 import { Icon, Brand } from './Icon';
 
-export function TopBar({ lang, dark, onLang, onDark, title, onBack }) {
+export function TopBar({ lang, dark, onLang, onDark, title }) {
   return (
     <div className="topbar">
-      {onBack ? (
-        <button className="icon-btn" onClick={onBack} aria-label="Back">
-          <Icon n="arrow_back" />
-        </button>
-      ) : (
-        <Brand size={18} />
-      )}
+      <Brand size={18} />
       {title && (
         <div style={{ flex: 1, textAlign: 'center', fontWeight: 700, fontSize: 16 }}>
           {title}

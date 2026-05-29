@@ -27,7 +27,7 @@ function Countdown({ t }) {
   );
 }
 
-export function Home({ t, onOpenAct, onGoto }) {
+export function Home({ t, onGoto }) {
   const { D } = useAppData();
   return (
     <>

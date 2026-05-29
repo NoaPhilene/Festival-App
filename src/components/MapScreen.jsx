@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Icon } from './Icon';
 
-export function MapScreen({ t, lang, onOpenLocation }) {
+export function MapScreen({ t }) {
   const [scale, setScale] = useState(1);
   const [tx, setTx] = useState(0);
   const [ty, setTy] = useState(0);
@@ -99,7 +99,7 @@ export function MapScreen({ t, lang, onOpenLocation }) {
         const px = tx + (loc.x / 100) * 388 * scale;
         const py = ty + (loc.y / 100) * (892 - 200) * scale;
         return (
-          <div key={loc.n} className="map-pin" style={{ left: px, top: py }} onClick={() => onOpenLocation && onOpenLocation(loc)}>
+          <div key={loc.n} className="map-pin" style={{ left: px, top: py }}>
             {loc.n}
           </div>
         );

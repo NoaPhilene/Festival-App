@@ -77,7 +77,7 @@ function AppInner() {
     home:     <Home     {...sharedProps} />,
     schedule: <Schedule {...sharedProps} />,
     favs:     <Favorites {...sharedProps} />,
-    map:      <MapScreen t={t} lang={lang} onOpenLocation={() => {}} />,
+    map:      <MapScreen t={t} />,
     info:     <Info t={t} />,
   };
 
