@@ -1,9 +1,14 @@
 <?php
-$host    = '127.0.0.1';
-$db      = 'festival-app';
-$user    = 'root';
-$pass    = '';
-$charset = 'utf8mb4';
+// $host    = '127.0.0.1';
+// $db      = 'festival-app';
+// $user    = 'root';
+// $pass    = '';
+// $charset = 'utf8mb4';
+
+$host = 'mysql';
+$user = 'root';
+$pass = 'QLctiRUcLUbR9jHO9nss';
+
 
 $dsn     = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
