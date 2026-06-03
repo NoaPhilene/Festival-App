@@ -15,7 +15,7 @@ function fb(string $en, string $nl): string
 
 // ── Stages ────────────────────────────────────────────────────────────────
 $stageRows    = $pdo->query("SELECT * FROM stage ORDER BY id")->fetchAll();
-$stageDbToApp = []; // db-id → slug
+$stageDbToApp = [];
 $stages       = [];
 
 foreach ($stageRows as $row) {
@@ -37,9 +37,8 @@ function toMins(string $t): int
     return (intval($h) - 10) * 60 + intval($m);
 }
 
-// Haal de unieke festivaldagen op in volgorde; eerste dag = sat, tweede = sun
-$dateRows = $pdo->query("SELECT DISTINCT dag FROM tijden ORDER BY dag")->fetchAll();
-$dayKeys  = ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri'];
+$dateRows  = $pdo->query("SELECT DISTINCT dag FROM tijden ORDER BY dag")->fetchAll();
+$dayKeys   = ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri'];
 $dateToKey = [];
 foreach ($dateRows as $i => $dr) {
     $dateToKey[substr($dr['dag'], 0, 10)] = $dayKeys[$i] ?? "day{$i}";
@@ -76,77 +75,75 @@ foreach ($artiestenRows as $row) {
 }
 
 // ── Info ──────────────────────────────────────────────────────────────────
-$infoRows  = $pdo->query("SELECT * FROM info ORDER BY id")->fetchAll();
-$bySection = [];
+$infoRows = $pdo->query("SELECT * FROM info ORDER BY id")->fetchAll();
+
+$grouped = [];
 foreach ($infoRows as $row) {
-    $bySection[$row['section']][] = $row;
+    $grouped[$row['title']][] = $row;
 }
 
-function buildInfo(array $bySection, string $lang): array
+$iconMap = [
+    'Fiets'              => 'directions_bike',
+    'Auto'               => 'directions_car',
+    'OV'                 => 'train',
+    'Shuttlebus'         => 'directions_bus',
+    'Taxi + Kiss & Ride' => 'local_taxi',
+    'Taxi & Kiss & Ride' => 'local_taxi',
+];
+
+function buildInfo(array $grouped, string $lang): array
 {
+    global $iconMap;
     $nl = $lang === 'nl';
 
-    $t = fn(string $nl_val, string $en_val): string => $nl ? $nl_val : fb($en_val, $nl_val);
-
-    // Sectietitel ophalen uit eerste rij van die sectie
-    $sectionTitle = function (string $key) use ($bySection, $nl): string {
-        $rows = $bySection[$key] ?? [];
-        return $rows ? ($nl ? $rows[0]['title'] : fb($rows[0]['title_en'], $rows[0]['title'])) : '';
-    };
-
-    // Algemeen & contact
     $adres = $navAdres = $datum = $tijden = '';
-    foreach ($bySection['general'] ?? [] as $r) {
-        $val = $t($r['bericht'], $r['bericht_en']);
-        match ($r['field']) {
-            'adres'    => $adres    = $val,
-            'navAdres' => $navAdres = $val,
-            'datum'    => $datum    = $val,
-            'tijden'   => $tijden   = $val,
-            default    => null,
+    foreach ($grouped['Algemeen & contact'] ?? [] as $r) {
+        $val = $nl ? $r['bericht'] : fb($r['bericht_en'], $r['bericht']);
+        match ($r['sub_title']) {
+            'Locatie'        => $adres    = $val,
+            'Navigatieadres' => $navAdres = $val,
+            'Datum'          => $datum    = $val,
+            'Openingstijden' => $tijden   = $val,
+            default          => null,
         };
     }
 
-    // Bereikbaarheid
     $access = [];
-    foreach ($bySection['access'] ?? [] as $r) {
+    foreach ($grouped['Bereikbaarheid'] ?? [] as $r) {
         $access[] = [
-            'icon'  => $r['icon'] ?: 'directions',
-            'title' => $t($r['sub_title'], $r['sub_title_en']),
-            'body'  => $t($r['bericht'],   $r['bericht_en']),
+            'icon'  => $iconMap[$r['sub_title']] ?? 'directions',
+            'title' => $nl ? $r['sub_title'] : fb($r['bericht_en'], $r['sub_title']),
+            'body'  => $nl ? $r['bericht'] : fb($r['bericht_en'], $r['bericht']),
         ];
     }
 
-    // Kluisjes
     $lockerBody = '';
-    foreach ($bySection['lockers'] ?? [] as $r) {
-        $lockerBody = $t($r['bericht'], $r['bericht_en']);
+    foreach ($grouped['Kluisjes'] ?? [] as $r) {
+        $lockerBody = $nl ? $r['bericht'] : fb($r['bericht_en'], $r['bericht']);
     }
 
-    // FAQ
     $faq = [];
-    foreach ($bySection['faq'] ?? [] as $r) {
+    foreach ($grouped['FAQ'] ?? [] as $r) {
         $faq[] = [
-            'q' => $t($r['sub_title'], $r['sub_title_en']),
-            'a' => $t($r['bericht'],   $r['bericht_en']),
+            'q' => $nl ? $r['sub_title'] : fb($r['bericht_en'], $r['sub_title']),
+            'a' => $nl ? $r['bericht']   : fb($r['bericht_en'], $r['bericht']),
         ];
     }
 
-    // Golden-GLU
     $gold = '';
-    foreach ($bySection['golden'] ?? [] as $r) {
-        $gold = $t($r['bericht'], $r['bericht_en']);
+    foreach ($grouped['Golden-GLU'] ?? [] as $r) {
+        $gold = $nl ? $r['bericht'] : fb($r['bericht_en'], $r['bericht']);
     }
 
     return [
         'title'      => 'Festival info',
         'sub'        => $nl ? 'Alles wat je moet weten' : 'Everything you need to know',
         'sections'   => [
-            'general' => $sectionTitle('general'),
-            'access'  => $sectionTitle('access'),
-            'lockers' => $sectionTitle('lockers'),
-            'faq'     => $sectionTitle('faq'),
-            'gold'    => $sectionTitle('golden'),
+            'general' => 'Algemeen & contact',
+            'access'  => 'Bereikbaarheid',
+            'lockers' => 'Kluisjes',
+            'faq'     => 'FAQ',
+            'gold'    => 'Golden-GLU',
         ],
         'adres'      => $adres,
         'navAdres'   => $navAdres,
@@ -161,7 +158,7 @@ function buildInfo(array $bySection, string $lang): array
 // ── Output ────────────────────────────────────────────────────────────────
 echo json_encode(
     array_merge(
-        ['stages' => $stages, 'acts' => $acts, 'info' => ['nl' => buildInfo($bySection, 'nl'), 'en' => buildInfo($bySection, 'en')]],
+        ['stages' => $stages, 'acts' => $acts, 'info' => ['nl' => buildInfo($grouped, 'nl'), 'en' => buildInfo($grouped, 'en')]],
         $schedule
     ),
     JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
