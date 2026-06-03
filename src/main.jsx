@@ -3,6 +3,15 @@ import { createRoot } from 'react-dom/client';
 import './styles.css';
 import App from './App.jsx';
 
+// ── Service Worker registratie ────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // SW registratie mislukt – geen showstopper
+    });
+  });
+}
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />

@@ -1,11 +1,85 @@
+import { useState, useEffect } from 'react';
 import { Icon } from './Icon';
+import { requestPermission } from '../notifications';
 
-export function Info({ t }) {
+function NotifToggle({ t, notifEnabled, setNotifEnabled }) {
+  const [permission, setPermission] = useState(
+    'Notification' in window ? Notification.permission : 'unsupported'
+  );
+
+  // Sync permission state when component mounts or focus returns
+  useEffect(() => {
+    const sync = () => {
+      if ('Notification' in window) setPermission(Notification.permission);
+    };
+    window.addEventListener('focus', sync);
+    return () => window.removeEventListener('focus', sync);
+  }, []);
+
+  const handleToggle = async () => {
+    if (notifEnabled) {
+      // Uitzetten
+      setNotifEnabled(false);
+      return;
+    }
+    // Aanzetten: vraag toestemming indien nog niet verleend
+    if (permission === 'unsupported') return;
+    if (permission === 'denied') return;
+
+    const result = await requestPermission();
+    setPermission(result);
+    if (result === 'granted') setNotifEnabled(true);
+  };
+
+  return (
+    <div className="info-tile notif-tile">
+      <div className="ico" style={{ background: notifEnabled ? 'var(--vermilion)' : undefined }}>
+        <Icon n={notifEnabled ? 'notifications_active' : 'notifications'} />
+      </div>
+      <div style={{ flex: 1 }}>
+        <h4>{t.notif.toggle}</h4>
+        <p>{t.notif.desc}</p>
+        {permission === 'denied' && (
+          <p style={{ color: 'var(--vermilion)', marginTop: 4, fontSize: 12 }}>
+            {t.notif.denied}
+          </p>
+        )}
+        {permission === 'unsupported' && (
+          <p style={{ color: 'var(--fg-muted)', marginTop: 4, fontSize: 12 }}>
+            {t.notif.unsupported}
+          </p>
+        )}
+      </div>
+      {permission !== 'unsupported' && permission !== 'denied' && (
+        <button
+          className={`notif-switch${notifEnabled ? ' on' : ''}`}
+          onClick={handleToggle}
+          aria-pressed={notifEnabled}
+          aria-label={t.notif.toggle}
+        >
+          <span className="knob" />
+        </button>
+      )}
+      {permission === 'default' && !notifEnabled && (
+        <button className="btn primary" style={{ fontSize: 12, padding: '6px 10px' }} onClick={handleToggle}>
+          {t.notif.permBtn}
+        </button>
+      )}
+    </div>
+  );
+}
+
+export function Info({ t, notifEnabled, setNotifEnabled }) {
   return (
     <>
       <div className="px-18">
         <h1 className="h1" style={{ fontSize: 32 }}>{t.info.title}</h1>
         <p className="italic-light" style={{ color: 'var(--fg-muted)', fontSize: 14, marginTop: 6 }}>{t.info.sub}</p>
+      </div>
+
+      <div className="info-section">
+        <h3 className="h3 eyebrow" style={{ color: 'var(--vermilion)', marginBottom: 12 }}>{t.notif.section}</h3>
+        <NotifToggle t={t} notifEnabled={notifEnabled} setNotifEnabled={setNotifEnabled} />
       </div>
 
       <div className="info-section">

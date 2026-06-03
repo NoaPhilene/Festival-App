@@ -1,0 +1,13 @@
+{
+  "name": "❤U Festival",
+  "short_name": "❤U",
+  "description": "Jouw festivalgids voor ❤U Festival 2026",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9f7f4",
+  "theme_color": "#9b1830",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

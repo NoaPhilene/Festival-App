@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { DataProvider, useAppData } from './DataContext';
+import { scheduleNotificationsForFavs, cancelAllNotifications } from './notifications';
 import { StatusBar } from './components/StatusBar';
 import { TopBar } from './components/TopBar';
 import { Onboarding } from './components/Onboarding';
@@ -54,6 +55,9 @@ function AppInner() {
     'sun-ponton-120-Martin Garrix',
   ]));
   const [openAct, setOpenAct] = useState(null);
+  const [notifEnabled, setNotifEnabled] = useState(
+    () => localStorage.getItem('notif-enabled') === 'true'
+  );
 
   useEffect(() => {
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
@@ -67,6 +71,30 @@ function AppInner() {
     });
   }, []);
 
+  // ── Bouw favItems op uit favs + D ──────────────────────────────────────
+  const favItems = useMemo(() => {
+    if (!D) return [];
+    const out = [];
+    for (const key of favs) {
+      const m = key.match(/^(sat|sun)-([a-z]+)-(\d+)-(.+)$/);
+      if (!m) continue;
+      const [, day, stageId, startStr, actName] = m;
+      const start = parseInt(startStr, 10);
+      const dayItems = day === 'sat' ? D.sat : D.sun;
+      const item = dayItems.find(it => it.stage === stageId && it.start === start && it.act === actName);
+      if (!item) continue;
+      const stage = D.stages.find(s => s.id === stageId);
+      out.push({ ...item, day, key, stage });
+    }
+    return out;
+  }, [favs, D]);
+
+  // ── Herschedul notificaties bij wijziging ──────────────────────────────
+  useEffect(() => {
+    if (!notifEnabled) { cancelAllNotifications(); return; }
+    scheduleNotificationsForFavs(favItems, lang);
+  }, [favItems, notifEnabled, lang]);
+
   if (loading) return <LoadingScreen />;
   if (error || !D) return <ErrorScreen message={error} />;
 
@@ -78,7 +106,7 @@ function AppInner() {
     schedule: <Schedule {...sharedProps} />,
     favs:     <Favorites {...sharedProps} />,
     map:      <MapScreen t={t} />,
-    info:     <Info t={t} />,
+    info:     <Info t={t} notifEnabled={notifEnabled} setNotifEnabled={(v) => { localStorage.setItem('notif-enabled', v); setNotifEnabled(v); }} />,
   };
 
   const tabs = [

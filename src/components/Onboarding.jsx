@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Icon, Heart, Brand } from './Icon';
 
 function QRPattern() {
@@ -34,8 +34,22 @@ function QRPattern() {
 
 export function Onboarding({ t, onDone }) {
   const [step, setStep] = useState(0);
+  const [installPrompt, setInstallPrompt] = useState(null);
   const slide = t.onb.slides[step];
   const last = step === t.onb.slides.length - 1;
+
+  useEffect(() => {
+    const handler = (e) => { e.preventDefault(); setInstallPrompt(e); };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstall = async () => {
+    if (!installPrompt) return;
+    installPrompt.prompt();
+    await installPrompt.userChoice;
+    setInstallPrompt(null);
+  };
 
   return (
     <div className="onb">
@@ -65,9 +79,23 @@ export function Onboarding({ t, onDone }) {
             {slide.body}
           </p>
           {step === 2 && (
-            <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, margin: 0 }} className="italic-light">
-              {t.onb.scan}
-            </p>
+            <>
+              <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, margin: 0 }} className="italic-light">
+                {t.onb.scan}
+              </p>
+              {installPrompt && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4 }}>
+                  <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13 }}>{t.onb.or}</span>
+                  <button
+                    className="pwa-install-link"
+                    onClick={handleInstall}
+                  >
+                    <Icon n="download" />
+                    {t.onb.install}
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>

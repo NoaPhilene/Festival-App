@@ -5,12 +5,20 @@ export const translations = {
     onb: {
       slides: [
         { eyebrow: 'Welkom op',        title: '❤U Festival',         body: 'Zaterdag 5 september 2026 — Strijkviertel, Utrecht. Jouw festivalgids in de palm van je hand.' },
-        { eyebrow: 'Mis niks',         title: 'Stel je favorieten in', body: 'Markeer acts en wij sturen een melding 15, 10 en 5 minuten voor aanvang. Geen meer rennen.' },
+        { eyebrow: 'Mis niks',         title: 'Stel je favorieten in', body: 'Markeer acts en wij sturen een melding 15 en 5 minuten voor aanvang. Geen meer rennen.' },
         { eyebrow: 'Installeer als app', title: 'Scan & ga',          body: 'Geen download nodig. Scan de QR-code en voeg ❤U toe aan je startscherm.' },
       ],
-      skip: 'Overslaan', next: 'Volgende', start: 'Start het festival', or: 'of', scan: 'Scan met je telefoon',
+      skip: 'Overslaan', next: 'Volgende', start: 'Start het festival', or: 'of', scan: 'Scan met je telefoon', install: 'Installeer de app direct',
     },
     tabs: { home: 'Home', schedule: 'Schema', favs: 'Favs', map: 'Kaart', info: 'Info' },
+    notif: {
+      section: 'Meldingen',
+      toggle: 'Ontvang meldingen',
+      desc: '15 en 5 minuten voor jouw favoriete acts',
+      permBtn: 'Sta meldingen toe',
+      denied: 'Meldingen zijn geblokkeerd. Pas dit aan in je browserinstellingen.',
+      unsupported: 'Je browser ondersteunt geen meldingen.',
+    },
     home: {
       countdownEyebrow: 'Het festival begint over',
       countdown: ['DAGEN', 'UREN', 'MIN', 'SEC'],
@@ -63,10 +71,18 @@ export const translations = {
     onb: {
       slides: [
         { eyebrow: 'Welcome to',         title: '❤U Festival',         body: 'Saturday September 5, 2026 — Strijkviertel, Utrecht. Your festival guide in the palm of your hand.' },
-        { eyebrow: "Don't miss a beat",  title: 'Pick your favourites', body: 'Mark acts and we will ping you 15, 10 and 5 minutes before they start. No more sprinting.' },
+        { eyebrow: "Don't miss a beat",  title: 'Pick your favourites', body: 'Mark acts and we will ping you 15 and 5 minutes before they start. No more sprinting.' },
         { eyebrow: 'Install as app',     title: 'Scan & go',            body: 'No download needed. Scan the QR code and add ❤U to your home screen.' },
       ],
-      skip: 'Skip', next: 'Next', start: 'Start the festival', or: 'or', scan: 'Scan with your phone',
+      skip: 'Skip', next: 'Next', start: 'Start the festival', or: 'or', scan: 'Scan with your phone', install: 'Install the app directly',
+    },
+    notif: {
+      section: 'Notifications',
+      toggle: 'Receive notifications',
+      desc: '15 and 5 minutes before your favourite acts',
+      permBtn: 'Allow notifications',
+      denied: 'Notifications are blocked. Change this in your browser settings.',
+      unsupported: 'Your browser does not support notifications.',
     },
     tabs: { home: 'Home', schedule: 'Schedule', favs: 'Favs', map: 'Map', info: 'Info' },
     home: {

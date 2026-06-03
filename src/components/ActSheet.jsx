@@ -22,9 +22,11 @@ export function ActSheet({ open, act, t, lang, favs, toggleFav, onClose }) {
           <>
             <div
               className="hero-img"
-              style={stage?.img
-                ? { backgroundImage: `url(${stage.img})` }
-                : { background: data?.hue || 'var(--vermilion)' }
+              style={data?.foto
+                ? { backgroundImage: `url(${data.foto})`, backgroundPosition: 'center top' }
+                : stage?.img
+                  ? { backgroundImage: `url(${stage.img})` }
+                  : { background: data?.hue || 'var(--vermilion)' }
               }
             >
               <div className="grad" />
