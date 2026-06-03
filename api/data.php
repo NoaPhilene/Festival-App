@@ -5,7 +5,8 @@ header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 
 // Fallback: als EN leeg is, gebruik NL
-function fb(string $en, string $nl): string {
+function fb(string $en, string $nl): string
+{
     return trim($en) !== '' ? $en : $nl;
 }
 
@@ -15,21 +16,20 @@ $stageDbToApp = []; // db-id → slug
 $stages       = [];
 
 foreach ($stageRows as $row) {
-    $slug = $row['slug'] !== ''
-        ? $row['slug']
-        : strtolower(str_replace(['The_', '_', ' '], ['', '', ''], $row['naam']));
+    $slug = strtolower(str_replace(['The_', '_', ' '], ['', '', ''], $row['naam']));
     $stageDbToApp[$row['id']] = $slug;
     $stages[] = [
         'id'   => $slug,
         'name' => str_replace('_', ' ', $row['naam']),
-        'tone' => $row['tone'],
+        'tone' => '',
         'img'  => $row['foto'],
-        'desc' => ['nl' => $row['desc_nl'], 'en' => fb($row['desc_en'], $row['desc_nl'])],
+        'desc' => ['nl' => '', 'en' => ''],
     ];
 }
 
 // ── Tijden → minuten na 10:00 ─────────────────────────────────────────────
-function toMins(string $t): int {
+function toMins(string $t): int
+{
     [$h, $m] = explode(':', $t);
     return (intval($h) - 10) * 60 + intval($m);
 }
@@ -79,13 +79,14 @@ foreach ($infoRows as $row) {
     $bySection[$row['section']][] = $row;
 }
 
-function buildInfo(array $bySection, string $lang): array {
+function buildInfo(array $bySection, string $lang): array
+{
     $nl = $lang === 'nl';
 
     $t = fn(string $nl_val, string $en_val): string => $nl ? $nl_val : fb($en_val, $nl_val);
 
     // Sectietitel ophalen uit eerste rij van die sectie
-    $sectionTitle = function(string $key) use ($bySection, $nl): string {
+    $sectionTitle = function (string $key) use ($bySection, $nl): string {
         $rows = $bySection[$key] ?? [];
         return $rows ? ($nl ? $rows[0]['title'] : fb($rows[0]['title_en'], $rows[0]['title'])) : '';
     };
