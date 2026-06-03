@@ -9,7 +9,7 @@ export function DataProvider({ children }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('/festival-react/api/data.php')
+    fetch('/api/data.php')
       .then(r => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();

@@ -5,9 +5,11 @@
 // $pass    = '';
 // $charset = 'utf8mb4';
 
-$host = 'mysql';
-$user = 'root';
-$pass = 'QLctiRUcLUbR9jHO9nss';
+$host = '172.19.0.2';
+$db      = 'festival-app';
+$user    = 'root';
+$pass    = 'QLctiRUcLUbR9jHO9nss';
+$charset = 'utf8mb4';
 
 
 $dsn     = "mysql:host=$host;dbname=$db;charset=$charset";
